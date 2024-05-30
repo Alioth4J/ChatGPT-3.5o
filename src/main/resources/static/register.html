@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .registration-container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 30px;
+            text-align: left;
+            font-family: Courier New;
+        }
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-family: Courier New;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin: auto;
+            font-family: Courier New;
+            width: calc(100% - 22px);
+        }
+        .btn-register {
+            width: calc(100% - 22px);
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin: auto;
+            margin-top: 20px;
+            font-family: Courier New;
+        }
+        .btn-register:hover {
+            background-color: #45a049;
+        }
+        .message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="registration-container">
+    <h2>User Registration</h2>
+    <form id="registrationForm">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn-register">Register</button>
+        <div class="message" id="message"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        var user = {
+            username: username,
+            password: password
+        };
+
+        fetch('/user/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    alert('Registration successful!');
+                    window.location.href = 'login.html';
+                } else {
+                    document.getElementById('message').innerText = 'Registration failed: ' + data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('message').innerText = 'An error occurred while processing your request.';
+            });
+    });
+</script>
+
+</body>
+</html>

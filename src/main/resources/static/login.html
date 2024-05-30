@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 30px;
+            text-align: left; /* 左对齐 */
+            font-family: Courier New; /* 字体 */
+        }
+        .form-group {
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-family: Courier New; /* 字体 */
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin: auto; /* 居中 */
+            font-family: Courier New; /* 字体 */
+            width: calc(100% - 22px); /* 增加输入框长度 */
+        }
+        .btn-login {
+            width: calc(100% - 22px); /* 宽度与输入框相同 */
+            background-color: #4CAF50; /* 绿色 */
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin: auto; /* 居中 */
+            margin-top: 20px; /* 往下移 */
+            font-family: Courier New; /* 字体 */
+        }
+        .btn-login:hover {
+            background-color: #45a049; /* 绿色悬停颜色 */
+        }
+        .message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button class="btn-login" onclick="login()">Login</button>
+</div>
+
+<script>
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        // Send login request to the server
+        fetch('/user/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ // 使用 JSON.stringify 将对象转换为 JSON 字符串
+                username: username,
+                password: password
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code === 200) {
+                    localStorage.setItem('token', data.data.token);
+                    localStorage.setItem('tokenHead', data.data.tokenHead);
+                    window.location.href = 'main.html';
+                } else {
+                    alert('Login failed: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+
+</body>
+</html>

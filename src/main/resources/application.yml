@@ -1,0 +1,44 @@
+server:
+  port: 1003
+spring:
+  application:
+    name: ChatGPT-3.5o
+  datasource:
+    url: jdbc:mysql://localhost:3306/chatgpt-3p5o
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # TODO
+    username:
+    password:
+  ai:
+    openai:
+      api-key:  # TODO
+  servlet:
+    multipart:
+      enabled: true
+logging:
+  level:
+    root: INFO
+  appenders:
+    console:
+      type: console
+      layout:
+        type: pattern
+        conversionPattern: "%d [%t] %-5p %c - %m%n"
+jwt:
+  tokenHeader: Authorization
+  secret: myPassword
+  expiration: 604800
+  tokenHead: Bearer
+secure:
+  ignored:
+    urls:
+      - /user/register
+      - /user/login
+      - /*.html
+minio:
+  endpoint: http://localhost:9000
+  bucketName: images
+  accessKey: minioadmin
+  secretKey: minioadmin
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

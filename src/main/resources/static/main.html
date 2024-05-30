@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件上传</title>
+    <style>
+        body {
+            font-family: Courier New, monospace;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+            text-align: left; /* 左对齐 */
+            font-family: Courier New, monospace; /* 字体 */
+        }
+        input[type="file"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            margin: auto; /* 居中 */
+            font-family: Courier New, monospace; /* 字体 */
+        }
+        button {
+            width: calc(100% - 22px); /* 宽度与输入框相同 */
+            background-color: #4CAF50; /* 绿色 */
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin: auto; /* 居中 */
+            margin-top: 20px; /* 往下移 */
+            font-family: Courier New, monospace; /* 字体 */
+        }
+        button:hover {
+            background-color: #45a049; /* 绿色悬停颜色 */
+        }
+        #response-container {
+            margin-top: 20px;
+            text-align: center;
+            font-family: Courier New, monospace; /* 字体 */
+        }
+        #response {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h1>上传文件</h1>
+    <input type="file" id="fileInput" accept=".jpg, .jpeg, .png, .pdf" required>
+    <button onclick="uploadFile()">上传</button>
+    <div id="response-container">
+        <div id="response"></div>
+    </div>
+</div>
+
+<script>
+    function uploadFile() {
+        var fileInput = document.getElementById('fileInput');
+        var file = fileInput.files[0];
+
+        var formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/uploadAndProcess', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('返回结果不OK');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('response').innerHTML = '服务器返回结果：' + data.data;
+            })
+            .catch(error => {
+                document.getElementById('response').innerHTML = '出现异常：' + error.message;
+            });
+    }
+
+    // 拦截所有的 fetch 请求并添加 Authorization 头部
+    window.fetch = (function (originalFetch) {
+        return function (url, options) {
+            // 如果未提供选项，则创建一个新对象
+            options = options || {};
+            // 如果未提供头部，则创建一个新对象
+            options.headers = options.headers || {};
+            // 如果本地存储中存在令牌，则包含带有令牌的授权头
+            var token = localStorage.getItem('token');
+            var tokenHead = localStorage.getItem('tokenHead');
+            if (token && tokenHead) {
+                options.headers['Authorization'] = tokenHead + ' ' + token;
+            }
+            // 使用修改后的选项调用原始 fetch 函数
+            return originalFetch(url, options);
+        };
+    })(window.fetch);
+
+</script>
+</body>
+</html>
