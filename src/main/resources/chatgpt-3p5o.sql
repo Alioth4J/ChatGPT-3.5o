@@ -10,3 +10,11 @@ create table `user` (
                         create_time datetime not null,
                         point int not null default 0
 );
+
+CREATE TABLE `history` (
+                           `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+                           `user_id` BIGINT NOT NULL,
+                           `question` VARCHAR(255),
+                           `answer` VARCHAR(255),
+                           `create_time` DATETIME NOT NULL
+);

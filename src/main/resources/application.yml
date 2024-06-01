@@ -42,3 +42,6 @@ minio:
   secretKey: minioadmin
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true

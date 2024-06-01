@@ -2,8 +2,10 @@ package com.alioth4j.chatgpt3p5o.controller;
 
 import com.alioth4j.chatgpt3p5o.common.CommonResult;
 import com.alioth4j.chatgpt3p5o.service.AiService;
+import com.alioth4j.chatgpt3p5o.service.HistoryService;
 import com.alioth4j.chatgpt3p5o.service.MinIOService;
 import com.alioth4j.chatgpt3p5o.service.OCRService;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 主控制器
@@ -34,6 +37,9 @@ public class MainController {
 
     @Autowired
     private AiService aiService;
+
+    @Autowired
+    private HistoryService historyService;
 
     @PostMapping("/uploadAndProcess")
     public CommonResult<String> uploadAndProcess(@NotNull @RequestParam("file") MultipartFile file) throws IOException {
@@ -52,6 +58,9 @@ public class MainController {
         String imgText = ocrService.doOCR(image);
         // AI
         String answer = aiService.getAnswer(imgText);
+        // 将搜索记录写到数据库
+        String question = IOUtils.toString(is, StandardCharsets.UTF_8);
+        historyService.create(question, answer);
         // 返回结果
         return CommonResult.success(answer);
     }

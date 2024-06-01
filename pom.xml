@@ -132,6 +132,11 @@
             <artifactId>alipay-sdk-java</artifactId>
             <version>4.38.61.ALL</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper</artifactId>
+            <version>6.1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

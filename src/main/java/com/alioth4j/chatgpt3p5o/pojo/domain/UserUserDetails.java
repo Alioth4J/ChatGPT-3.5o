@@ -20,6 +20,9 @@ public class UserUserDetails implements UserDetails {
         this.resourceList = resourceList;
     }
 
+    public Long getUserId() {
+        return user.getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
