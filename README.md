@@ -21,3 +21,4 @@ ChatGPT-3.5 本身不能读取图片中的文字，但是将 ChatGPT-3.5 与图�
 - MinIO
 - MySQL
 - MyBatis
+- Redis
